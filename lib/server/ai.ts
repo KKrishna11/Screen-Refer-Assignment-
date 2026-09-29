@@ -69,7 +69,18 @@ async function callGemini(prompt: string, key: string): Promise<{ text: string; 
     }),
     signal: AbortSignal.timeout(timeoutMs()),
   });
-  if (!res.ok) throw new Error(`AI provider returned HTTP ${res.status}`);
+  // if (!res.ok) throw new Error(`AI provider returned HTTP ${res.status}`);
+if (!res.ok) {
+  const errorBody = await res.text();
+
+  console.error("Gemini API error:", {
+    status: res.status,
+    body: errorBody,
+    model,
+  });
+
+  throw new Error(`AI provider returned HTTP ${res.status}`);
+}
   const data = (await res.json()) as { candidates?: { content?: { parts?: { text?: string }[] } }[] };
   const text = data.candidates?.[0]?.content?.parts?.map((p) => p.text ?? "").join("") ?? "";
   return { text, model };
@@ -88,7 +99,18 @@ async function callOpenAI(prompt: string, key: string): Promise<{ text: string; 
     }),
     signal: AbortSignal.timeout(timeoutMs()),
   });
-  if (!res.ok) throw new Error(`AI provider returned HTTP ${res.status}`);
+  // if (!res.ok) throw new Error(`AI provider returned HTTP ${res.status}`);
+  if (!res.ok) {
+  const errorBody = await res.text();
+
+  console.error("Gemini API error:", {
+    status: res.status,
+    body: errorBody,
+    model,
+  });
+
+  throw new Error(`AI provider returned HTTP ${res.status}`);
+}
   const data = (await res.json()) as { choices?: { message?: { content?: string } }[] };
   return { text: data.choices?.[0]?.message?.content ?? "", model };
 }
