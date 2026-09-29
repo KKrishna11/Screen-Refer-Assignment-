@@ -244,7 +244,7 @@ function AiSummary({ s }: { s: Screening }) {
           <p>{state.en}</p>
           <p lang="hi">{state.hi}</p>
           <p className="small muted" style={{ marginBottom: 0 }}>
-            Written by AI from the answers above; it can make mistakes. The risk level shown above is from the app&apos;s fixed rules, not the AI.
+            Written by AI from the answers above; it can make mistakes.
           </p>
         </>
       )}
