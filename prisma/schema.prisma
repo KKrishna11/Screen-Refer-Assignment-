@@ -1,0 +1,136 @@
+// Screen & Refer — database schema (MySQL via Prisma)
+// Create the database with utf8mb4 so Devanagari and other scripts store correctly:
+//   CREATE DATABASE screen_refer CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  WORKER
+  DOCTOR
+}
+
+enum Sex {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum RiskLevel {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum ReviewStatus {
+  PENDING
+  ACCEPTED
+  OVERRIDDEN
+}
+
+enum AiStatus {
+  NONE
+  OK
+  FAILED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  username     String   @unique @db.VarChar(64)
+  passwordHash String
+  name         String   @db.VarChar(120)
+  role         Role
+  createdAt    DateTime @default(now())
+
+  patients   Patient[]   @relation("PatientCreatedBy")
+  screenings Screening[] @relation("ScreeningWorker")
+  reviews    Screening[] @relation("ScreeningReviewer")
+  audit      AuditLog[]
+}
+
+model Patient {
+  id             String    @id @default(cuid())
+  fullName       String    @db.VarChar(160)
+  // lower-cased, whitespace-collapsed, NFC-normalised copy used for search + duplicate hints
+  nameKey        String    @db.VarChar(160)
+  // always stored as 10 digits (Indian mobile), whatever format was typed
+  phone          String    @db.VarChar(10)
+  dob            DateTime  @db.Date
+  sex            Sex
+  village        String?   @db.VarChar(160)
+  createdById    String
+  createdBy      User      @relation("PatientCreatedBy", fields: [createdById], references: [id])
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime?
+  screenings     Screening[]
+
+  @@index([phone])
+  @@index([nameKey])
+  @@index([createdById, deletedAt])
+}
+
+model Screening {
+  id               String       @id @default(cuid())
+  // generated on the phone when the form is opened; makes submission idempotent
+  clientId         String       @unique @db.VarChar(64)
+  patientId        String
+  patient          Patient      @relation(fields: [patientId], references: [id])
+  workerId         String
+  worker           User         @relation("ScreeningWorker", fields: [workerId], references: [id])
+  formVersion      String       @db.VarChar(32)
+  rulesVersion     String       @db.VarChar(32)
+  screenedAt       DateTime     @default(now())
+  // snapshot of what was true when the risk was computed
+  ageYears         Int
+  // answers to questions that were visible and used for scoring
+  answers          Json
+  // answers the worker gave but which are hidden by a later change (kept, never scored)
+  hiddenAnswers    Json
+  // visible required questions with no answer (e.g. after a DOB correction)
+  missingQuestions Json
+  score            Int
+  computedRisk     RiskLevel
+  reasons          Json
+  // what the doctor sees as the final level (computed, or doctor override)
+  finalRisk        RiskLevel
+  reviewStatus     ReviewStatus @default(PENDING)
+  reviewReason     String?      @db.Text
+  reviewedById     String?
+  reviewedBy       User?        @relation("ScreeningReviewer", fields: [reviewedById], references: [id])
+  reviewedAt       DateTime?
+  recomputedNote   String?      @db.Text
+  aiStatus         AiStatus     @default(NONE)
+  aiSummaryEn      String?      @db.Text
+  aiSummaryHi      String?      @db.Text
+  aiError          String?      @db.VarChar(255)
+  aiUpdatedAt      DateTime?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  @@index([workerId])
+  @@index([patientId])
+  @@index([reviewStatus, finalRisk])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId    String
+  actor      User     @relation(fields: [actorId], references: [id])
+  action     String   @db.VarChar(48)
+  entityType String   @db.VarChar(24)
+  entityId   String   @db.VarChar(32)
+  oldValue   Json?
+  newValue   Json?
+  reason     String?  @db.Text
+  createdAt  DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@index([createdAt])
+}

@@ -1,0 +1,97 @@
+/* Plain CSS, no UI framework: small download for budget phones on slow networks.
+   System fonts include Devanagari on Android (Noto Sans Devanagari). */
+:root {
+  --bg: #f6f7f5;
+  --card: #ffffff;
+  --text: #1c2321;
+  --muted: #5d6865;
+  --line: #dde2df;
+  --brand: #0f766e;
+  --brand-ink: #ffffff;
+  --low: #166534;
+  --low-bg: #dcfce7;
+  --med: #92400e;
+  --med-bg: #fef3c7;
+  --high: #991b1b;
+  --high-bg: #fee2e2;
+  --warn-bg: #fff7e6;
+  --warn-line: #f5c26b;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", "Noto Sans Devanagari", sans-serif;
+  -webkit-text-size-adjust: 100%;
+}
+a { color: var(--brand); }
+h1 { font-size: 1.35rem; margin: 0.25rem 0 0.75rem; }
+h2 { font-size: 1.1rem; margin: 1.25rem 0 0.5rem; }
+h3 { font-size: 1rem; margin: 1rem 0 0.4rem; }
+
+.container { max-width: 760px; margin: 0 auto; padding: 12px 14px 80px; }
+
+.nav { background: var(--brand); color: var(--brand-ink); }
+.nav-inner { max-width: 760px; margin: 0 auto; padding: 8px 14px; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
+.nav a, .nav button { color: var(--brand-ink); text-decoration: none; font-weight: 600; background: none; border: 0; font: inherit; padding: 6px 0; cursor: pointer; }
+.nav .brand { font-weight: 800; margin-right: auto; }
+.nav .who { font-size: 0.85rem; opacity: 0.9; width: 100%; }
+
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px; margin: 10px 0; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.spread { justify-content: space-between; }
+.muted { color: var(--muted); }
+.small { font-size: 0.875rem; }
+.hi { font-size: 0.92rem; color: var(--muted); display: block; }
+
+label.field { display: block; margin: 10px 0; font-weight: 600; }
+input, select, textarea {
+  width: 100%; font: inherit; padding: 11px 12px; border: 1px solid #b9c2be; border-radius: 8px; background: #fff; margin-top: 4px;
+}
+textarea { min-height: 90px; }
+input:focus, select:focus, textarea:focus { outline: 3px solid #99d5cf; border-color: var(--brand); }
+
+.btn {
+  display: inline-block; font: inherit; font-weight: 700; padding: 11px 16px; min-height: 44px; border-radius: 8px;
+  border: 1px solid var(--brand); background: var(--brand); color: var(--brand-ink); cursor: pointer; text-decoration: none; text-align: center;
+}
+.btn.secondary { background: #fff; color: var(--brand); }
+.btn.danger { background: #fff; color: var(--high); border-color: var(--high); }
+.btn:disabled { opacity: 0.55; cursor: not-allowed; }
+.btn.block { width: 100%; }
+
+.choices { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.choice {
+  flex: 1 1 130px; min-height: 48px; padding: 10px; border-radius: 8px; border: 1px solid #b9c2be; background: #fff;
+  font: inherit; text-align: left; cursor: pointer;
+}
+.choice[aria-pressed="true"] { border: 2px solid var(--brand); background: #e6f4f2; font-weight: 700; }
+
+.q { padding: 12px 0; border-top: 1px solid var(--line); }
+.q:first-of-type { border-top: 0; }
+.q .err, .field-err { color: var(--high); font-size: 0.9rem; margin-top: 4px; font-weight: 400; }
+
+.badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-weight: 800; font-size: 0.85rem; }
+.risk-LOW { background: var(--low-bg); color: var(--low); }
+.risk-MEDIUM { background: var(--med-bg); color: var(--med); }
+.risk-HIGH { background: var(--high-bg); color: var(--high); }
+.risk-big { font-size: 1.6rem; padding: 6px 18px; }
+
+.disclaimer {
+  border: 2px solid var(--text); border-radius: 8px; padding: 10px 12px; font-weight: 800; background: #fff; margin: 10px 0;
+}
+.notice { background: var(--warn-bg); border: 1px solid var(--warn-line); border-radius: 8px; padding: 10px 12px; margin: 10px 0; }
+.notice.error { background: var(--high-bg); border-color: #f1a7a7; }
+.notice.ok { background: var(--low-bg); border-color: #9bd9ad; }
+
+table { width: 100%; border-collapse: collapse; }
+td, th { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 0.85rem; color: var(--muted); }
+
+.list-item { display: block; color: inherit; text-decoration: none; }
+.list-item:hover { background: #fafbfa; }
+.pager { display: flex; gap: 10px; align-items: center; justify-content: center; margin: 14px 0; }
+.hidden-answer { color: var(--muted); text-decoration: line-through; }
+pre.json { white-space: pre-wrap; word-break: break-word; font-size: 0.8rem; background: #f3f4f3; padding: 8px; border-radius: 6px; margin: 4px 0; }

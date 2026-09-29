@@ -1,0 +1,244 @@
+{
+  "version": "form-2026.09-v1",
+  "notes": "Conditions may only reference 'age' (years), 'ageMonths', 'sex' (MALE|FEMALE|OTHER) or answers to EARLIER questions as 'q.<id>'. This is checked when the app starts.",
+  "sections": [
+    {
+      "id": "general",
+      "title": { "en": "General symptoms", "hi": "सामान्य लक्षण" },
+      "questions": [
+        {
+          "id": "fever",
+          "type": "yesno",
+          "required": true,
+          "label": { "en": "Fever in the last 2 weeks?", "hi": "पिछले 2 हफ़्तों में बुखार?" }
+        },
+        {
+          "id": "fever_days",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 60,
+          "unit": { "en": "days", "hi": "दिन" },
+          "label": { "en": "For how many days?", "hi": "कितने दिनों से?" },
+          "showIf": { "fact": "q.fever", "op": "eq", "value": "yes" }
+        },
+        {
+          "id": "cough",
+          "type": "yesno",
+          "required": true,
+          "label": { "en": "Cough?", "hi": "खांसी?" }
+        },
+        {
+          "id": "cough_duration",
+          "type": "single",
+          "required": true,
+          "label": { "en": "How long has the cough lasted?", "hi": "खांसी कब से है?" },
+          "options": [
+            { "value": "lt2w", "label": { "en": "Less than 2 weeks", "hi": "2 हफ़्तों से कम" } },
+            { "value": "gte2w", "label": { "en": "2 weeks or more", "hi": "2 हफ़्ते या ज़्यादा" } }
+          ],
+          "showIf": { "fact": "q.cough", "op": "eq", "value": "yes" }
+        },
+        {
+          "id": "blood_sputum",
+          "type": "yesno",
+          "required": true,
+          "label": { "en": "Blood in the cough or sputum?", "hi": "खांसी या बलगम में खून?" },
+          "showIf": { "fact": "q.cough", "op": "eq", "value": "yes" }
+        },
+        {
+          "id": "breathless",
+          "type": "yesno",
+          "required": true,
+          "label": {
+            "en": "Breathless at rest or with light activity?",
+            "hi": "आराम करते या हल्का काम करते समय सांस फूलती है?"
+          }
+        },
+        {
+          "id": "weight_loss",
+          "type": "yesno",
+          "required": true,
+          "label": {
+            "en": "Weight loss without reason in the last 3 months?",
+            "hi": "पिछले 3 महीनों में बिना कारण वज़न कम हुआ?"
+          },
+          "showIf": { "fact": "age", "op": "gte", "value": 5 }
+        }
+      ]
+    },
+    {
+      "id": "child",
+      "title": { "en": "Child under 5", "hi": "5 साल से छोटा बच्चा" },
+      "showIf": { "fact": "age", "op": "lt", "value": 5 },
+      "questions": [
+        {
+          "id": "muac",
+          "type": "single",
+          "required": true,
+          "label": { "en": "MUAC tape colour (arm band)", "hi": "MUAC टेप का रंग (बांह पर)" },
+          "options": [
+            { "value": "green", "label": { "en": "Green", "hi": "हरा" } },
+            { "value": "yellow", "label": { "en": "Yellow", "hi": "पीला" } },
+            { "value": "red", "label": { "en": "Red", "hi": "लाल" } }
+          ],
+          "showIf": { "fact": "ageMonths", "op": "gte", "value": 6 }
+        },
+        {
+          "id": "vaccination",
+          "type": "single",
+          "required": true,
+          "label": { "en": "Vaccinations for age", "hi": "उम्र के अनुसार टीके" },
+          "options": [
+            { "value": "complete", "label": { "en": "Complete", "hi": "पूरे" } },
+            { "value": "partial", "label": { "en": "Some missed", "hi": "कुछ छूटे" } },
+            { "value": "none", "label": { "en": "None", "hi": "कोई नहीं" } },
+            { "value": "unknown", "label": { "en": "Don't know", "hi": "पता नहीं" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lifestyle",
+      "title": { "en": "Tobacco", "hi": "तंबाकू" },
+      "showIf": { "fact": "age", "op": "gte", "value": 15 },
+      "questions": [
+        {
+          "id": "tobacco",
+          "type": "single",
+          "required": true,
+          "label": { "en": "Tobacco use", "hi": "तंबाकू का सेवन" },
+          "options": [
+            { "value": "none", "label": { "en": "None", "hi": "नहीं" } },
+            { "value": "smoke", "label": { "en": "Smokes (bidi/cigarette)", "hi": "बीड़ी/सिगरेट" } },
+            { "value": "chew", "label": { "en": "Chews (gutkha/khaini)", "hi": "गुटखा/खैनी" } },
+            { "value": "both", "label": { "en": "Both", "hi": "दोनों" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "adult",
+      "title": { "en": "Blood pressure and sugar", "hi": "ब्लड प्रेशर और शुगर" },
+      "showIf": { "fact": "age", "op": "gte", "value": 18 },
+      "questions": [
+        {
+          "id": "bp_measured",
+          "type": "yesno",
+          "required": true,
+          "label": { "en": "Was blood pressure measured today?", "hi": "क्या आज ब्लड प्रेशर नापा गया?" }
+        },
+        {
+          "id": "bp_systolic",
+          "type": "number",
+          "required": true,
+          "min": 60,
+          "max": 260,
+          "unit": { "en": "mmHg", "hi": "mmHg" },
+          "label": { "en": "BP — upper number (systolic)", "hi": "बीपी — ऊपर वाला नंबर" },
+          "showIf": { "fact": "q.bp_measured", "op": "eq", "value": "yes" }
+        },
+        {
+          "id": "bp_diastolic",
+          "type": "number",
+          "required": true,
+          "min": 30,
+          "max": 160,
+          "unit": { "en": "mmHg", "hi": "mmHg" },
+          "label": { "en": "BP — lower number (diastolic)", "hi": "बीपी — नीचे वाला नंबर" },
+          "showIf": { "fact": "q.bp_measured", "op": "eq", "value": "yes" }
+        },
+        {
+          "id": "known_diabetes",
+          "type": "yesno",
+          "required": true,
+          "label": { "en": "Already told they have diabetes (sugar)?", "hi": "पहले से शुगर (डायबिटीज़) बताई गई है?" }
+        },
+        {
+          "id": "thirst_urination",
+          "type": "yesno",
+          "required": true,
+          "label": {
+            "en": "Very thirsty or passing urine very often?",
+            "hi": "बहुत प्यास लगना या बार-बार पेशाब आना?"
+          },
+          "showIf": { "fact": "q.known_diabetes", "op": "eq", "value": "no" }
+        }
+      ]
+    },
+    {
+      "id": "women",
+      "title": { "en": "Women's health", "hi": "महिला स्वास्थ्य" },
+      "showIf": {
+        "all": [
+          { "fact": "sex", "op": "eq", "value": "FEMALE" },
+          { "fact": "age", "op": "gte", "value": 10 },
+          { "fact": "age", "op": "lte", "value": 55 }
+        ]
+      },
+      "questions": [
+        {
+          "id": "periods_started",
+          "type": "yesno",
+          "required": true,
+          "label": { "en": "Have periods started?", "hi": "क्या माहवारी शुरू हो गई है?" }
+        },
+        {
+          "id": "periods_pattern",
+          "type": "single",
+          "required": true,
+          "label": { "en": "Periods in the last 6 months", "hi": "पिछले 6 महीनों में माहवारी" },
+          "options": [
+            { "value": "regular", "label": { "en": "Regular", "hi": "नियमित" } },
+            { "value": "irregular", "label": { "en": "Irregular or very heavy", "hi": "अनियमित या बहुत ज़्यादा" } },
+            { "value": "stopped", "label": { "en": "Stopped", "hi": "बंद हो गई" } }
+          ],
+          "showIf": { "fact": "q.periods_started", "op": "eq", "value": "yes" }
+        },
+        {
+          "id": "pregnant",
+          "type": "single",
+          "required": true,
+          "label": { "en": "Pregnant now?", "hi": "क्या अभी गर्भवती हैं?" },
+          "options": [
+            { "value": "yes", "label": { "en": "Yes", "hi": "हाँ" } },
+            { "value": "no", "label": { "en": "No", "hi": "नहीं" } },
+            { "value": "unsure", "label": { "en": "Not sure", "hi": "पक्का नहीं" } }
+          ],
+          "showIf": {
+            "all": [
+              { "fact": "q.periods_started", "op": "eq", "value": "yes" },
+              { "fact": "age", "op": "gte", "value": 15 },
+              { "fact": "age", "op": "lte", "value": 49 }
+            ]
+          }
+        },
+        {
+          "id": "pregnancy_months",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 10,
+          "unit": { "en": "months", "hi": "महीने" },
+          "label": { "en": "How many months pregnant?", "hi": "कितने महीने की गर्भावस्था?" },
+          "showIf": { "fact": "q.pregnant", "op": "eq", "value": "yes" }
+        },
+        {
+          "id": "danger_signs",
+          "type": "multi",
+          "required": true,
+          "exclusive": "none",
+          "label": { "en": "Any of these danger signs?", "hi": "इनमें से कोई खतरे का संकेत?" },
+          "options": [
+            { "value": "bleeding", "label": { "en": "Bleeding", "hi": "खून आना" } },
+            { "value": "severe_headache", "label": { "en": "Severe headache / blurred vision", "hi": "तेज़ सिरदर्द / धुंधला दिखना" } },
+            { "value": "swelling", "label": { "en": "Swelling of face or hands", "hi": "चेहरे या हाथों में सूजन" } },
+            { "value": "reduced_movement", "label": { "en": "Baby moving less", "hi": "बच्चे का कम हिलना" } },
+            { "value": "none", "label": { "en": "None of these", "hi": "इनमें से कोई नहीं" } }
+          ],
+          "showIf": { "fact": "q.pregnant", "op": "eq", "value": "yes" }
+        }
+      ]
+    }
+  ]
+}

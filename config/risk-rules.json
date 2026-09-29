@@ -1,0 +1,115 @@
+{
+  "version": "rules-2026.09-v1",
+  "notes": "Scored on the server using only answers to questions that were visible. Any red flag = HIGH. Otherwise total points >= high -> HIGH, >= medium -> MEDIUM, else LOW. These thresholds are illustrative, not clinically validated.",
+  "thresholds": { "medium": 3, "high": 6 },
+  "rules": [
+    {
+      "id": "blood_sputum",
+      "redFlag": true,
+      "reason": "Blood in cough or sputum",
+      "when": { "fact": "q.blood_sputum", "op": "eq", "value": "yes" }
+    },
+    {
+      "id": "child_breathless",
+      "redFlag": true,
+      "reason": "Breathlessness in a child under 5",
+      "when": { "all": [ { "fact": "q.breathless", "op": "eq", "value": "yes" }, { "fact": "age", "op": "lt", "value": 5 } ] }
+    },
+    {
+      "id": "muac_red",
+      "redFlag": true,
+      "reason": "MUAC red — possible severe acute malnutrition",
+      "when": { "fact": "q.muac", "op": "eq", "value": "red" }
+    },
+    {
+      "id": "bp_very_high",
+      "redFlag": true,
+      "reason": "Very high blood pressure (180/110 or above)",
+      "when": { "any": [ { "fact": "q.bp_systolic", "op": "gte", "value": 180 }, { "fact": "q.bp_diastolic", "op": "gte", "value": 110 } ] }
+    },
+    {
+      "id": "pregnancy_danger",
+      "redFlag": true,
+      "reason": "Pregnancy danger sign reported",
+      "when": { "fact": "q.danger_signs", "op": "includesAny", "value": ["bleeding", "severe_headache", "swelling", "reduced_movement"] }
+    },
+    {
+      "id": "cough_2w",
+      "points": 3,
+      "reason": "Cough for 2 weeks or more (TB testing advised)",
+      "when": { "fact": "q.cough_duration", "op": "eq", "value": "gte2w" }
+    },
+    {
+      "id": "breathless",
+      "points": 3,
+      "reason": "Breathless at rest or light activity",
+      "when": { "all": [ { "fact": "q.breathless", "op": "eq", "value": "yes" }, { "fact": "age", "op": "gte", "value": 5 } ] }
+    },
+    {
+      "id": "bp_high",
+      "points": 3,
+      "reason": "High blood pressure (140/90 or above)",
+      "when": { "any": [ { "fact": "q.bp_systolic", "op": "gte", "value": 140 }, { "fact": "q.bp_diastolic", "op": "gte", "value": 90 } ] }
+    },
+    {
+      "id": "muac_yellow",
+      "points": 3,
+      "reason": "MUAC yellow — possible moderate malnutrition",
+      "when": { "fact": "q.muac", "op": "eq", "value": "yellow" }
+    },
+    {
+      "id": "fever_long",
+      "points": 2,
+      "reason": "Fever for 7 days or more",
+      "when": { "fact": "q.fever_days", "op": "gte", "value": 7 }
+    },
+    {
+      "id": "weight_loss",
+      "points": 2,
+      "reason": "Unexplained weight loss",
+      "when": { "fact": "q.weight_loss", "op": "eq", "value": "yes" }
+    },
+    {
+      "id": "diabetes_symptoms",
+      "points": 2,
+      "reason": "Thirst or frequent urination without known diabetes",
+      "when": { "fact": "q.thirst_urination", "op": "eq", "value": "yes" }
+    },
+    {
+      "id": "vaccination_gap",
+      "points": 1,
+      "reason": "Vaccinations missed or unknown",
+      "when": { "fact": "q.vaccination", "op": "in", "value": ["partial", "none", "unknown"] }
+    },
+    {
+      "id": "tobacco",
+      "points": 1,
+      "reason": "Uses tobacco",
+      "when": { "fact": "q.tobacco", "op": "in", "value": ["smoke", "chew", "both"] }
+    },
+    {
+      "id": "known_diabetes",
+      "points": 1,
+      "reason": "Known diabetes — needs regular follow-up",
+      "when": { "fact": "q.known_diabetes", "op": "eq", "value": "yes" }
+    },
+    {
+      "id": "periods_irregular",
+      "points": 1,
+      "reason": "Irregular or very heavy periods",
+      "when": { "fact": "q.periods_pattern", "op": "eq", "value": "irregular" }
+    },
+    {
+      "id": "pregnant",
+      "points": 1,
+      "reason": "Pregnant — confirm antenatal care",
+      "when": { "fact": "q.pregnant", "op": "eq", "value": "yes" }
+    },
+    {
+      "id": "age_60",
+      "points": 1,
+      "reason": "Age 60 or above",
+      "when": { "fact": "age", "op": "gte", "value": 60 }
+    }
+  ]
+}
