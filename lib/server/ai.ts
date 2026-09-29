@@ -58,14 +58,15 @@ async function callGemini(prompt: string, key: string): Promise<{ text: string; 
     headers: { "Content-Type": "application/json", "x-goog-api-key": key },
     body: JSON.stringify({
       contents: [{ role: "user", parts: [{ text: prompt }] }],
-      generationConfig: {
-        temperature: 0.2,
-        responseMimeType: "application/json",
-        maxOutputTokens: 2048,
-        // 2.5 Flash "thinks" by default and those tokens count against maxOutputTokens;
-        // a summary doesn't need it, and turning it off keeps latency low.
-        thinkingConfig: { thinkingBudget: 0 },
-      },
+      
+generationConfig: {
+  responseMimeType: "application/json",
+  maxOutputTokens: 2048,
+  thinkingConfig: {
+    thinkingLevel: "minimal",
+  },
+},
+
     }),
     signal: AbortSignal.timeout(timeoutMs()),
   });
